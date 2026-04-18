@@ -1,9 +1,10 @@
 // api/notify.js
-// Deploy this to Vercel (free). 
-// Set RESEND_API_KEY in Vercel project environment variables.
+// Sends email via Brevo (formerly Sendinblue) — free tier 300/day, queues if exceeded.
+// Set BREVO_API_KEY in Vercel environment variables.
+// Set BREVO_SENDER_EMAIL to your verified sender email in Brevo.
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Origin", "https://digislam-f2fd5.web.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
@@ -19,17 +20,20 @@ export default async function handler(req, res) {
   const senderLabel = fromName || "someone who cares 🤫";
 
   try {
-    const response = await fetch("https://api.resend.com/emails", {
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "api-key": process.env.BREVO_API_KEY,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "slambook <noreply@yourdomain.com>", // 🔧 replace with your verified Resend domain
-        to: [recipientEmail],
+        sender: {
+          name: "P Batch Slambook",
+          email: process.env.BREVO_SENDER_EMAIL,
+        },
+        to: [{ email: recipientEmail, name: recipientName }],
         subject: `📒 you got a slam, ${firstName}!`,
-        html: `
+        htmlContent: `
           <div style="font-family:'Georgia',serif;max-width:480px;margin:0 auto;background:#f5f0e8;padding:40px 32px;border-radius:12px;">
             <div style="font-size:48px;text-align:center;margin-bottom:16px;">📒</div>
             <h1 style="font-size:28px;color:#1e4d2b;text-align:center;font-style:italic;margin-bottom:8px;">
@@ -46,7 +50,7 @@ export default async function handler(req, res) {
               </p>
             </div>
             <div style="text-align:center;">
-              <a href="https://slam-dbe6f.web.app"
+              <a href="https://digislam-f2fd5.web.app"
                  style="display:inline-block;background:#1e4d2b;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:0.05em;">
                 open slambook →
               </a>
@@ -61,7 +65,7 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const err = await response.text();
-      console.error("Resend error:", err);
+      console.error("Brevo error:", err);
       return res.status(500).json({ error: "email failed", detail: err });
     }
 
