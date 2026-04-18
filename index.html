@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>slambook '26 · p batch ceg</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=Caveat:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --c:#f5f0e8;--c2:#ede6d6;--c3:#e3dac8;--c4:#d6ccb4;
+  --g:#1e4d2b;--g2:#276135;--g3:#33803f;--g4:#5aab66;
+  --gl:rgba(30,77,43,0.07);--gl2:rgba(30,77,43,0.14);--gl3:rgba(30,77,43,0.22);
+  --ink:#1c1914;--ink2:#4a443a;--ink3:#8c826e;
+  --red:#c0392b;--gold:#9a7c2e;
+  --paper:#fefcf3;--paper2:#fffef8;--ruled:#b8d0e8;--margin:#e8a4a4;
+  --r:10px;
+  --font-d:'Lora',serif;--font-b:'DM Sans',sans-serif;
+  --shadow:0 2px 16px rgba(30,77,43,0.10);--shadow2:0 4px 32px rgba(30,77,43,0.14);
+  --lh:36px;
+}
+html,body{min-height:100%;background:var(--c);color:var(--ink);font-family:var(--font-b);font-size:15px;-webkit-font-smoothing:antialiased;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q45 20 30 35 Q15 20 30 5Z' fill='%231e4d2b'/%3E%3C/svg%3E");background-size:60px 60px;}
+.screen{display:none;min-height:100vh;position:relative;z-index:1;}
+.screen.active{display:flex;flex-direction:column;animation:rise .4s cubic-bezier(.22,.68,0,1.15);}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.wrap{max-width:460px;width:100%;margin:0 auto;padding:0 16px;flex:1;display:flex;flex-direction:column;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0 18px;border-bottom:1.5px solid var(--c3);margin-bottom:30px;}
+.logo{font-family:var(--font-d);font-size:24px;color:var(--g);letter-spacing:-.5px;font-weight:600;}
+.logo span{color:var(--ink2);font-style:italic;font-weight:400;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.chip{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--g2);border:1.5px solid var(--g4);padding:3px 10px;border-radius:20px;background:var(--gl);}
+.page-title{font-family:var(--font-d);font-size:clamp(32px,9vw,46px);font-weight:400;line-height:1.1;color:var(--ink);margin-bottom:8px;}
+.page-title em{font-style:italic;color:var(--g2);}
+.page-sub{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:28px;}
+.dots{display:flex;gap:6px;margin-bottom:24px;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--c4);transition:all .25s;}
+.dot.on{background:var(--g);width:22px;border-radius:4px;}
+.dot.done{background:var(--g4);opacity:.6;}
+.field{margin-bottom:20px;}
+.lbl{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--g2);margin-bottom:8px;}
+input[type=tel],input[type=text],input[type=password],input[type=email],input[type=url],select{width:100%;padding:13px 16px;background:var(--c2);border:1.5px solid var(--c4);border-radius:var(--r);color:var(--ink);font-family:var(--font-b);font-size:15px;outline:none;transition:border-color .2s,background .2s,box-shadow .2s;appearance:none;-webkit-appearance:none;}
+input[type=tel]:focus,input[type=text]:focus,input[type=password]:focus,input[type=email]:focus,input[type=url]:focus,select:focus{border-color:var(--g3);background:var(--c);box-shadow:0 0 0 3px var(--gl2);}
+input::placeholder{color:var(--ink3);}
+input[readonly]{opacity:.65;cursor:default;}
+.pwd-wrap{position:relative;}
+.pwd-wrap input{padding-right:48px;}
+.pwd-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink3);font-size:17px;padding:4px;line-height:1;transition:color .15s;}
+.pwd-eye:hover{color:var(--g2);}
+.btn{display:block;width:100%;padding:15px 22px;background:var(--g);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-b);font-size:13.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .15s,transform .1s,box-shadow .15s;box-shadow:var(--shadow);}
+.btn:hover:not(:disabled){background:var(--g2);box-shadow:var(--shadow2);}
+.btn:active:not(:disabled){transform:scale(.98);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.btn-ghost{background:none;border:none;color:var(--ink3);font-family:var(--font-b);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:0;display:inline;transition:color .15s;}
+.btn-ghost:hover{color:var(--g2);}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 22px;background:#fff;color:#3c4043;border:1.5px solid var(--c4);border-radius:var(--r);font-family:var(--font-b);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;box-shadow:0 1px 8px rgba(0,0,0,.07);}
+.btn-google:hover{border-color:#aaa;box-shadow:0 2px 14px rgba(0,0,0,.12);background:#f8f8f8;}
+.btn-google svg{flex-shrink:0;}
+.btn-sm{padding:9px 16px;font-size:12px;width:auto;display:inline-block;border-radius:8px;box-shadow:none;}
+.btn-outline{background:transparent;border:1.5px solid var(--c4);color:var(--ink2);box-shadow:none;}
+.btn-outline:hover{border-color:var(--g3);color:var(--g2);background:var(--gl);}
+.btn-danger{background:var(--red);box-shadow:none;}
+.btn-danger:hover{background:#a93226;}
+.err{font-size:13px;color:var(--red);margin-top:7px;min-height:16px;}
+.hint{font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.55;}
+.pwd-strength{display:flex;gap:5px;margin-top:8px;}
+.pwd-bar{flex:1;height:3px;border-radius:2px;background:var(--c4);transition:background .25s;}
+.pwd-bar.weak{background:var(--red);}
+.pwd-bar.ok{background:var(--gold);}
+.pwd-bar.strong{background:var(--g3);}
+.nav-tabs{display:flex;gap:3px;background:var(--c2);border:1.5px solid var(--c4);border-radius:var(--r);padding:4px;margin-bottom:24px;}
+.nav-tab{flex:1;padding:10px 8px;border:none;border-radius:8px;background:transparent;color:var(--ink3);font-family:var(--font-b);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.nav-tab.active{background:var(--g);color:#fff;box-shadow:var(--shadow);}
+.nav-tab:not(.active):hover{color:var(--g2);background:var(--gl2);}
+.search-wrap{position:relative;margin-bottom:14px;}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink3);}
+.search-wrap input{padding-left:40px;}
+.plist{border:1.5px solid var(--c4);border-radius:var(--r);overflow:hidden;max-height:420px;overflow-y:auto;background:var(--c2);}
+.plist::-webkit-scrollbar{width:4px;}
+.plist::-webkit-scrollbar-track{background:var(--c2);}
+.plist::-webkit-scrollbar-thumb{background:var(--c4);border-radius:2px;}
+.person-row{display:flex;align-items:center;gap:14px;padding:14px 16px;cursor:pointer;border-bottom:1px solid var(--c3);background:transparent;transition:background .12s;}
+.person-row:last-child{border-bottom:none;}
+.person-row:hover{background:var(--gl);}
+.person-row:active{background:var(--gl2);}
+.avi{width:42px;height:42px;border-radius:50%;background:var(--gl2);border:2px solid var(--g4);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--g);flex-shrink:0;}
+.person-info{flex:1;min-width:0;}
+.person-name{font-size:14.5px;font-weight:500;color:var(--ink);}
+.person-meta{font-size:11.5px;color:var(--ink3);margin-top:2px;}
+.person-arrow{color:var(--c4);font-size:18px;transition:color .12s;}
+.person-row:hover .person-arrow{color:var(--g3);}
+.person-header{display:flex;align-items:center;gap:16px;padding:18px;background:linear-gradient(135deg,var(--gl) 0%,var(--c2) 100%);border:1.5px solid var(--c4);border-radius:14px;margin-bottom:24px;box-shadow:var(--shadow);}
+.person-header .avi{width:58px;height:58px;font-size:20px;border-width:2.5px;}
+.ph-name{font-family:var(--font-d);font-size:22px;font-weight:600;color:var(--g);line-height:1.2;}
+.ph-sub{font-size:12px;color:var(--ink3);margin-top:3px;}
+.welcome-strip{background:var(--g);color:#fff;padding:12px 18px;border-radius:var(--r);margin-bottom:20px;font-size:13px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);}
+.welcome-strip strong{font-weight:600;}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .6s linear infinite;vertical-align:middle;margin-right:6px;}
+.spin.dark{border:2px solid var(--c4);border-top-color:var(--ink2);}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--g);color:#fff;padding:11px 24px;border-radius:30px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:10000;white-space:nowrap;pointer-events:none;box-shadow:var(--shadow2);}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+.uname{font-size:12px;color:var(--ink3);font-weight:600;}
+.logout-btn{background:none;border:1.5px solid var(--c4);color:var(--ink3);font-family:var(--font-b);font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;padding:5px 12px;border-radius:20px;transition:all .15s;}
+.logout-btn:hover{border-color:var(--red);color:var(--red);}
+.modal-bg{position:fixed;inset:0;background:rgba(28,25,20,.55);z-index:999;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px);}
+.modal-bg.on{display:flex;}
+.modal{background:var(--c);border:1.5px solid var(--c4);border-radius:16px;padding:28px;max-width:360px;width:100%;box-shadow:var(--shadow2);}
+.modal-title{font-family:var(--font-d);font-size:22px;margin-bottom:8px;color:var(--ink);}
+.modal-sub{font-size:13px;color:var(--ink2);margin-bottom:22px;line-height:1.65;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns .btn{flex:1;}
+.empty{text-align:center;padding:40px 20px;}
+.empty-art{font-size:42px;margin-bottom:12px;}
+.empty-title{font-family:var(--font-d);font-size:18px;font-style:italic;color:var(--ink2);margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--ink3);}
+.how-steps{background:var(--c2);border:1.5px solid var(--c4);border-radius:14px;padding:18px;margin-bottom:26px;}
+.how-step{display:flex;gap:14px;align-items:flex-start;padding:6px 0;}
+.how-step:not(:last-child){border-bottom:1px solid var(--c3);margin-bottom:6px;}
+.how-num{font-family:var(--font-d);font-size:20px;font-weight:600;color:var(--g);line-height:1;flex-shrink:0;width:24px;font-style:italic;}
+.how-text{font-size:13px;color:var(--ink2);line-height:1.55;padding-top:2px;}
+.how-text strong{color:var(--ink);font-weight:500;}
+.auth-card{background:var(--c2);border:1.5px solid var(--c4);border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:var(--shadow);}
+.pb{padding-bottom:44px;}
+.wrote-pill{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;color:var(--g);background:var(--gl2);border:1px solid var(--g4);padding:2px 9px;border-radius:20px;letter-spacing:.04em;}
+.or-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink3);font-size:12px;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--c4);}
+
+/* ─── WRITE FORM ─── */
+.write-panel{background:var(--c2);border:1.5px solid var(--c4);border-radius:14px;padding:16px;margin-bottom:24px;box-shadow:var(--shadow);}
+.write-panel-hd{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--g2);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.write-panel-hd::after{content:'';flex:1;height:1px;background:var(--c4);}
+.no-edit-note{font-family:'Caveat',cursive;font-size:14px;color:var(--ink3);margin-bottom:12px;padding:6px 12px;background:var(--gl);border-radius:8px;border:1px dashed var(--g4);text-align:center;}
+.nb-sec{border:1.5px solid #c8bca0;border-radius:10px;margin-bottom:14px;overflow:hidden;box-shadow:1px 2px 8px rgba(0,0,0,.06);}
+.nb-sec-hd{padding:8px 14px;background:var(--g);color:#fff;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;}
+.nb-sec-hd-title{flex:1;}
+.notebook-area{display:block;width:100%;background-color:var(--paper);background-image:linear-gradient(90deg,transparent 46px,var(--margin) 46px,var(--margin) 48px,transparent 48px),linear-gradient(transparent calc(var(--lh) - 1px), var(--ruled) 1px);background-size:100% var(--lh);background-position:0 0;background-attachment:local;padding:6px 16px 8px 60px;font-family:'Caveat',cursive;font-size:20px;line-height:var(--lh);color:#1c1914;border:none;outline:none;resize:none;min-height:calc(var(--lh) * 4);box-shadow:none;border-radius:0;transition:background-color .15s;vertical-align:top;}
+.notebook-area:focus{background-color:var(--paper2);}
+.notebook-area::placeholder{color:#b8a88a;line-height:var(--lh);}
+.pen-row-hd{display:flex;align-items:center;gap:8px;}
+.pen-label-sm{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;opacity:.8;}
+.pen-dots{display:flex;gap:6px;}
+.pen-dot{width:16px;height:16px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0;}
+.pen-dot:hover{transform:scale(1.2);}
+.pen-dot.active{border-color:#fff;transform:scale(1.15);}
+.nb-emoji-body{background:var(--paper);padding:12px 16px;}
+.emoji-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.emoji-opt{font-size:26px;cursor:pointer;padding:6px 10px;border-radius:10px;border:2px solid var(--c4);transition:all .15s;line-height:1;background:#fff;}
+.emoji-opt:hover{transform:scale(1.15);border-color:var(--g4);}
+.emoji-opt.selected{border-color:var(--g);background:var(--gl2);transform:scale(1.1);}
+.anon-row{display:flex;gap:8px;margin:14px 0 12px;}
+.anon-opt{flex:1;padding:9px 10px;border:1.5px solid var(--c4);border-radius:8px;background:var(--c);color:var(--ink3);font-family:var(--font-b);font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;text-align:center;transition:all .15s;}
+.anon-opt.on{border-color:var(--g3);background:var(--gl2);color:var(--g);}
+.contact-row{display:flex;gap:8px;}
+.contact-row input{flex:1;}
+
+/* Cloudinary URL section */
+.cloudinary-wrap{margin-bottom:12px;}
+.cloudinary-wrap .hint-link{color:var(--g2);text-decoration:underline;font-weight:600;}
+
+/* ══ SLAM CARD ══ */
+.slam-wrap{margin-bottom:16px;}
+.slam-wrap:nth-child(odd) .slam-card{transform:rotate(-0.35deg);}
+.slam-wrap:nth-child(even) .slam-card{transform:rotate(0.28deg);}
+.slam-wrap:hover .slam-card{transform:rotate(0deg) scale(1.005);box-shadow:3px 5px 22px rgba(0,0,0,.14);}
+.slam-card{background:var(--paper);border:1.5px solid #c8bca0;border-radius:3px 3px 8px 8px;overflow:hidden;box-shadow:2px 3px 14px rgba(0,0,0,.10);transition:box-shadow .2s,transform .2s;}
+.slam-holes{background:#ece8db;border-bottom:1.5px solid #c8bca0;display:flex;align-items:center;padding:7px 18px;gap:16px;}
+.slam-hole{width:11px;height:11px;border-radius:50%;background:var(--c);border:1.5px solid #b4a88e;flex-shrink:0;}
+.slam-spiral-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,#c4b89a 30%,#c4b89a 70%,transparent);}
+.slam-body{background-color:var(--paper);background-image:linear-gradient(90deg, transparent 52px, var(--margin) 52px, var(--margin) 54px, transparent 54px),linear-gradient(transparent calc(var(--lh) - 1px), var(--ruled) 1px);background-size: 100% var(--lh);background-position: 0 0;}
+.sl-gap{height: var(--lh);flex-shrink: 0;}
+.sl-from-row{height: var(--lh);display:flex;align-items:center;justify-content:space-between;padding: 0 18px 0 66px;flex-shrink: 0;}
+.sl-from{font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);line-height:1;}
+.sl-date{font-family:'Caveat',cursive;font-size:18px;color:var(--ink3);line-height:1;}
+.sl-from-sep{height:2px;background:rgba(192,57,43,.55);flex-shrink:0;}
+.sl-section{height: var(--lh);width: 100%;background: rgba(30,77,43,0.10);border-top: 1px solid rgba(30,77,43,0.25);border-bottom: 1px solid rgba(30,77,43,0.25);display:flex;align-items:center;padding: 0 18px 0 66px;flex-shrink: 0;box-sizing: border-box;}
+.sl-section-label{font-family:var(--font-b);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--g);line-height:1;}
+.sl-block{font-family:'Caveat',cursive;font-size:20px;line-height: var(--lh);word-break:break-word;white-space: pre-wrap;color:var(--ink);padding: 6px 18px 0 66px;min-height: var(--lh);}
+.sl-emoji-row{height: var(--lh);display:flex;align-items:center;gap:10px;padding: 0 18px 0 66px;flex-shrink: 0;}
+.sl-emoji-opt{font-size:18px;opacity:.28;transition:all .1s;}
+.sl-emoji-opt.sel{font-size:26px;opacity:1;}
+.sl-contact{font-family:'Caveat',cursive;font-size:19px;color:var(--ink2);display:flex;gap:20px;flex-wrap:wrap;align-items:center;height: var(--lh);padding: 2px 18px 0 66px;flex-shrink: 0;overflow: hidden;}
+.sl-photo-area{padding: calc(var(--lh) * 0.5) 0 calc(var(--lh) * 0.5);display:flex;justify-content:center;}
+.slam-photo-pasted{position:relative;display:inline-block;background:#fff;padding:8px 8px 30px;box-shadow:2px 4px 14px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.08);transform:rotate(-1.5deg);cursor:zoom-in;transition:transform .2s,box-shadow .2s;max-width:72%;}
+.slam-photo-pasted:hover{transform:rotate(0deg) scale(1.02);box-shadow:4px 6px 20px rgba(0,0,0,.22);}
+.slam-photo-pasted::before{content:'';position:absolute;top:-10px;left:50%;transform:translateX(-50%) rotate(-0.8deg);width:52px;height:18px;background:rgba(220,208,170,.75);border-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,.10);}
+.slam-photo-pasted img{width:100%;display:block;object-fit:cover;aspect-ratio:4/3;}
+.sl-bottom{ height: calc(var(--lh) * 1.5); }
+#lightbox{display:none;position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.93);align-items:center;justify-content:center;cursor:zoom-out;animation:lbIn .18s ease;}
+#lightbox.on{display:flex;}
+@keyframes lbIn{from{opacity:0}to{opacity:1}}
+#lightbox img{max-width:94vw;max-height:90vh;object-fit:contain;border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,.6);pointer-events:none;user-select:none;}
+#lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;line-height:1;opacity:.8;transition:opacity .15s;}
+#lightbox-close:hover{opacity:1;}
+.tear-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:5px 6px 0;margin-bottom:4px;}
+.tear-note{font-family:'Caveat',cursive;font-size:14px;color:var(--ink3);flex:1;font-style:italic;}
+.tear-btn{background:none;border:1.5px solid transparent;border-radius:7px;padding:5px 11px;font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--red);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.tear-btn:hover{background:rgba(192,57,43,.07);border-color:rgba(192,57,43,.3);}
+.slam-done-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:11px 16px;background:linear-gradient(135deg,var(--gl2) 0%,var(--gl) 100%);border:1.5px solid var(--g4);border-radius:12px;}
+.slam-done-title{font-family:var(--font-d);font-size:15px;font-weight:600;color:var(--g);line-height:1.2;}
+.slam-done-sub{font-size:11px;color:var(--ink3);margin-top:2px;}
+.slam-done-pill{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--g2);background:var(--gl2);border:1px solid var(--g4);padding:3px 10px;border-radius:20px;white-space:nowrap;}
+
+/* funny rejection screen */
+.reject-art{font-size:60px;text-align:center;margin:20px 0 10px;}
+.reject-title{font-family:var(--font-d);font-size:28px;font-style:italic;text-align:center;color:var(--red);margin-bottom:10px;}
+.reject-sub{font-size:14px;color:var(--ink2);text-align:center;line-height:1.8;margin-bottom:24px;}
+.reject-card{background:var(--c2);border:1.5px solid var(--c4);border-radius:14px;padding:20px;margin-bottom:20px;font-family:'Caveat',cursive;font-size:18px;color:var(--ink2);text-align:center;line-height:1.8;}
+
+@media(max-width:430px){
+  :root{ --lh:34px; }
+  .sl-block{font-size:18px;padding-left:56px;}
+  .sl-section{padding-left:56px;}
+  .sl-from-row{padding-left:56px;}
+  .sl-emoji-row{padding-left:56px;}
+  .sl-contact{padding-left:56px;font-size:17px;}
+  .slam-body{background-image:linear-gradient(90deg, transparent 44px, var(--margin) 44px, var(--margin) 46px, transparent 46px),linear-gradient(transparent calc(var(--lh) - 1px), var(--ruled) 1px);}
+  .notebook-area{padding:6px 12px 8px 52px;font-size:19px;}
+  .topbar{padding:16px 0 14px;}
+  .logo{font-size:20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div class="screen active" id="s-landing">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+      <div class="chip">p batch ceg '26</div>
+    </div>
+    <div style="padding:16px 0 10px;font-size:72px;text-align:center;line-height:1;">📒</div><br>
+    <h1 class="page-title">last days,<br><em>never forgotten.</em></h1>
+    <p class="page-sub">p batch ceg's private slam book. write for anyone, read only yours.</p>
+    <div class="how-steps">
+      <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-weight:700;margin-bottom:10px;">how it works</div>
+      <div class="how-step"><div class="how-num">1</div><div class="how-text"><strong>sign in</strong> with your class Google account</div></div>
+      <div class="how-step"><div class="how-num">2</div><div class="how-text"><strong>set a password</strong> — login instantly next time</div></div>
+      <div class="how-step"><div class="how-num">3</div><div class="how-text"><strong>write slams</strong> — describe them, rate them, share something. read only what's written for you 🔒</div></div>
+    </div>
+    <button class="btn" onclick="go('s-auth')">sign in to slam →</button>
+    <p style="text-align:center;font-size:12px;color:var(--ink3);margin-top:14px;">only p batch emails work 🔒</p>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- ══ AUTH (Google + Login) ══ -->
+<div class="screen" id="s-auth">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+      <button class="btn-ghost" onclick="go('s-landing')">← back</button>
+    </div>
+    <h1 class="page-title">sign in to<br><em>slambook.</em></h1>
+    <p class="page-sub" id="auth-sub">use your class Google account to continue.</p>
+
+    <!-- Google sign-in -->
+    <div id="google-section">
+      <button class="btn-google" onclick="signInWithGoogle()" id="google-btn">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.2 30.3 0 24 0 14.7 0 6.7 5.5 2.7 13.5l7.8 6.1C12.4 13.2 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.4 5.5-5 7.2l7.7 6C43.6 37.7 46.5 31.5 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.4c-.5-1.4-.8-3-.8-4.4s.3-3 .8-4.4l-7.8-6.1C1 16.2 0 20 0 24s1 7.8 2.7 11.5l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.7l-7.7-6c-2.1 1.4-4.8 2.2-7.8 2.2-6.2 0-11.6-3.7-13.5-9.1l-7.8 6.1C6.7 42.5 14.7 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg>
+        continue with google
+      </button>
+      <div class="err" id="google-err"></div>
+    </div>
+
+    <div class="or-divider">already set a password? login below</div>
+
+    <!-- Password login -->
+    <div class="auth-card">
+      <div class="field">
+        <label class="lbl">📧 email</label>
+        <input type="email" id="login-email" placeholder="your class email" autocomplete="username"/>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="lbl">🔑 password</label>
+        <div class="pwd-wrap">
+          <input type="password" id="login-pwd" placeholder="your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginWithPwd()"/>
+          <button class="pwd-eye" onclick="togglePwd('login-pwd',this)">👁</button>
+        </div>
+        <div class="err" id="login-err"></div>
+      </div>
+    </div>
+    <button class="btn" onclick="loginWithPwd()" id="login-btn">login →</button>
+    <div style="text-align:center;margin-top:14px;">
+      <button class="btn-ghost" onclick="document.getElementById('google-section').style.display='block';document.querySelector('.or-divider').style.display='flex';">forgot password? sign in with google again</button>
+    </div>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- ══ UNAUTHORIZED ══ -->
+<div class="screen" id="s-unauth">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+    </div>
+    <div class="reject-art">🚫</div>
+    <div class="reject-title">not in the list, bestie.</div>
+    <div class="reject-sub">we checked twice. your email is NOT on the p batch list.</div>
+    <div class="reject-card">
+      maybe check the group for ur correct email?<br>
+      or maybe you're just not in p batch?? 🤔<br>
+      <br>
+      <span style="font-size:22px;">no cringe allowed here 😂</span>
+    </div>
+    <button class="btn" onclick="signOutAndBack()">← try a different account</button>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- ══ SET PASSWORD ══ -->
+<div class="screen" id="s-setpwd">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+      <div class="chip">one time setup</div>
+    </div>
+    <div class="dots"><div class="dot done"></div><div class="dot on"></div></div>
+    <h1 class="page-title">hey <em id="setup-greeting">there</em>! 👋</h1>
+    <p class="page-sub">set a password so you never need Google sign-in again.</p>
+    <div class="auth-card">
+      <div class="field">
+        <label class="lbl">📧 username (your email)</label>
+        <input type="email" id="setname-in" autocomplete="username" readonly/>
+        <div class="hint">this is how you log in next time</div>
+      </div>
+      <div class="field">
+        <label class="lbl">🔑 new password</label>
+        <div class="pwd-wrap">
+          <input type="password" id="setpwd-in" placeholder="make it memorable" autocomplete="new-password" oninput="pwdStrength()"/>
+          <button class="pwd-eye" onclick="togglePwd('setpwd-in',this)">👁</button>
+        </div>
+        <div class="pwd-strength"><div class="pwd-bar" id="pb1"></div><div class="pwd-bar" id="pb2"></div><div class="pwd-bar" id="pb3"></div><div class="pwd-bar" id="pb4"></div></div>
+        <div class="err" id="setpwd-err"></div>
+        <div class="hint">min 6 characters</div>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="lbl">🔁 confirm password</label>
+        <div class="pwd-wrap">
+          <input type="password" id="confirmpwd-in" placeholder="same again" autocomplete="new-password" onkeydown="if(event.key==='Enter')savePassword()"/>
+          <button class="pwd-eye" onclick="togglePwd('confirmpwd-in',this)">👁</button>
+        </div>
+        <div class="err" id="confirmpwd-err"></div>
+      </div>
+    </div>
+    <button class="btn" id="setpwd-btn" onclick="savePassword()">save & enter the slambook →</button>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="screen" id="s-home">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+      <div class="topbar-right">
+        <span class="uname" id="topbar-name"></span>
+        <button class="logout-btn" onclick="doLogout()">logout</button>
+      </div>
+    </div>
+    <div class="welcome-strip" id="home-banner" style="display:none;">
+      🌿 <span>hey <strong id="banner-name"></strong>, welcome back!</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" id="tab-write-btn" onclick="switchTab('write')">✏️ write</button>
+      <button class="nav-tab" id="tab-mine-btn" onclick="switchTab('mine')">🔒 my slams</button>
+    </div>
+    <div id="tab-write">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-in" placeholder="search classmates…" oninput="filterList()" autocomplete="off"/>
+      </div>
+      <div class="plist" id="plist"></div>
+      <div class="empty" id="plist-empty" style="display:none;">
+        <div class="empty-art">🔍</div>
+        <div class="empty-title">no one found</div>
+        <div class="empty-sub">try a different name</div>
+      </div>
+    </div>
+    <div id="tab-mine" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink3);margin-bottom:18px;padding:10px 14px;background:var(--gl);border-radius:8px;border:1px solid var(--gl3);">
+        <span style="font-size:16px;">🔒</span><span>only you can see these — slams written for you</span>
+      </div>
+      <div id="mine-list"></div>
+    </div>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- ══ PERSON PAGE ══ -->
+<div class="screen" id="s-person">
+  <div class="wrap">
+    <div class="topbar">
+      <div class="logo">slam<span>book</span></div>
+      <button class="btn-ghost" onclick="go('s-home')">← classmates</button>
+    </div>
+    <div class="person-header">
+      <div class="avi" id="ph-avi" style="width:58px;height:58px;font-size:20px;border-width:2.5px;">?</div>
+      <div style="flex:1">
+        <div class="ph-name" id="ph-name">-</div>
+        <div class="ph-sub" id="ph-sub">-</div>
+      </div>
+    </div>
+
+    <!-- WRITE FORM -->
+    <div class="write-panel" id="write-panel">
+      <div class="write-panel-hd">Write a slam</div>
+      <div class="no-edit-note">🖋️ written in permanent ink — memories don't come with ctrl+z!</div>
+
+      <div class="nb-sec">
+        <div class="nb-sec-hd">
+          <span class="nb-sec-hd-title" id="desc-label">describe them</span>
+          <div class="pen-row-hd">
+            <span class="pen-label-sm">ink</span>
+            <div class="pen-dots" id="pen-dots">
+              <div class="pen-dot active" style="background:#1c1914;" onclick="setPenColor(this,'#1c1914')"></div>
+              <div class="pen-dot" style="background:#ffffff;border-color:#aaa;" onclick="setPenColor(this,'#ffffff')"></div>
+              <div class="pen-dot" style="background:#1a3a8f;" onclick="setPenColor(this,'#1a3a8f')"></div>
+              <div class="pen-dot" style="background:#8b1a1a;" onclick="setPenColor(this,'#8b1a1a')"></div>
+              <div class="pen-dot" style="background:#6b4c11;" onclick="setPenColor(this,'#6b4c11')"></div>
+            </div>
+          </div>
+        </div>
+        <textarea class="notebook-area" id="slam-text" placeholder="write anything — their vibe, memories, inside jokes..."></textarea>
+      </div>
+
+      <div class="nb-sec">
+        <div class="nb-sec-hd"><span class="nb-sec-hd-title" id="rate-label">rate them</span></div>
+        <div class="nb-emoji-body">
+          <div class="emoji-row" id="emoji-rate-row">
+            <span class="emoji-opt" onclick="selectEmoji(this,'😍')">😍</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'😂')">😂</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'😊')">😊</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'😁')">😁</span>
+            <span class="emoji-opt" onclick="selectEmoji(this,'😐')">😐</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="nb-sec">
+        <div class="nb-sec-hd"><span class="nb-sec-hd-title" id="about-label">about you</span></div>
+        <textarea class="notebook-area" id="extras-text" placeholder="who you are, what you love, something to remember you by..."></textarea>
+      </div>
+
+      <!-- Imgur direct upload -->
+      <div class="nb-sec">
+        <div class="nb-sec-hd"><span class="nb-sec-hd-title">📷 add a memory photo (optional)</span></div>
+        <div style="background:var(--paper);padding:14px 16px;">
+          <input type="file" id="img-file-in" accept="image/*" style="display:none" onchange="handleImgUpload(event)"/>
+          <div id="img-upload-btn" onclick="document.getElementById('img-file-in').click()"
+            style="display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;border:2px dashed var(--c4);border-radius:10px;cursor:pointer;font-size:14px;color:var(--ink2);transition:all .15s;">
+            <span style="font-size:22px;">🖼️</span> tap to pick a photo
+          </div>
+          <div id="img-uploading" style="display:none;text-align:center;padding:12px;font-size:13px;color:var(--ink3);">
+            <span class="spin dark"></span> uploading…
+          </div>
+          <div id="img-preview-wrap" style="margin-top:10px;display:none;">
+            <img id="img-preview" src="" alt="preview" style="max-height:140px;border-radius:8px;border:2px solid var(--c4);display:block;"/>
+            <button class="btn-ghost" style="font-size:12px;margin-top:6px;color:var(--red);" onclick="clearImg()">✕ remove</button>
+          </div>
+          <div class="err" id="img-url-err"></div>
+        </div>
+      </div>
+
+      <div class="anon-row">
+        <button class="anon-opt on" id="anon-yes" onclick="setAnon(true)">👤 anonymous</button>
+        <button class="anon-opt" id="anon-no" onclick="setAnon(false)">🙋 show my name</button>
+      </div>
+      <div class="hint" id="anon-hint" style="margin-bottom:4px;">they won't know it's you.</div>
+
+      <div id="contact-section" style="display:none;margin-top:10px;padding:10px;background:var(--gl);border-radius:8px;">
+        <div style="font-size:11px;color:var(--g2);font-weight:600;margin-bottom:8px;">want to share contact?</div>
+        <div class="contact-row">
+          <input type="tel" id="contact-phone" placeholder="phone" autocomplete="tel"/>
+          <input type="text" id="insta-in" placeholder="@instagram" autocomplete="off"/>
+        </div>
+      </div>
+
+      <div class="err" id="slam-err" style="margin-top:12px;"></div>
+      <button class="btn" id="post-btn" onclick="postSlam()" style="margin-top:14px;">post slam 🚀</button>
+    </div>
+
+    <div id="my-slams-section" style="display:none">
+      <div id="my-slams-for-person"></div>
+    </div>
+    <div class="pb"></div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="del-modal">
+  <div class="modal">
+    <div class="modal-title">tear this page?</div>
+    <div class="modal-sub">gone forever — but you can write a fresh one after! ✂️</div>
+    <div class="modal-btns">
+      <button class="btn btn-outline" onclick="closeModal()">cancel</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">tear it 🗑️</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti-canvas" style="display:none;position:fixed;inset:0;pointer-events:none;z-index:99999;"></canvas>
+<div class="toast" id="toast"></div>
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lb-img" src="" alt="photo"/>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut,
+  onAuthStateChanged, setPersistence, browserLocalPersistence
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, getDocs, getDoc,
+  setDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+/* ══════════════════════════════════════════════
+   🔧 CONFIG — replace with your actual values
+   ══════════════════════════════════════════════ */
+const firebaseConfig = {
+    apiKey: "AIzaSyCQFxINeVagtLsbhlfTySycsEWG1ffGjQw",
+    authDomain: "digislam-f2fd5.firebaseapp.com",
+    projectId: "digislam-f2fd5",
+    storageBucket: "digislam-f2fd5.firebasestorage.app",
+    messagingSenderId: "57727821571",
+    appId: "1:57727821571:web:03b2e2a31101044c03eb36",
+    measurementId: "G-SKJ3KZZW2B"
+};
+
+// 🔧 Your Resend API key & sender — set in Firebase Functions env, not here.
+// The actual send happens via a Cloud Function (see SETUP.md).
+// This is just the endpoint you'll deploy.
+const NOTIFY_FUNCTION_URL = "https://us-central1-slam-dbe6f.cloudfunctions.net/notifySlam";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+setPersistence(auth, browserLocalPersistence).catch(()=>{});
+
+let classlist = [], currentUser = null, currentName = '', currentEmail = '';
+let sessionActive = false, selectedPerson = null, isAnon = true;
+let deleteSlamId = null, bootedScreen = false, isProcessing = false;
+let selectedEmoji = null, penColor = '#1c1914';
+window._slamImgPaths = {};
+
+/* ══ AUTH BOOT ══ */
+onAuthStateChanged(auth, async (user) => {
+  if (bootedScreen) return;
+  bootedScreen = true;
+  if (user) {
+    currentUser = user;
+    currentEmail = user.email || '';
+    try {
+      const ud = await getDoc(doc(db,'users', user.uid));
+      if (ud.exists() && ud.data().hasPassword) {
+        currentName = ud.data().name || '';
+        prefillLoginEmail();
+        document.getElementById('google-section').style.display = 'none';
+        document.querySelector('.or-divider').style.display = 'none';
+        go('s-auth');
+      } else {
+        // Google-verified but no password yet
+        const whitelist = await checkWhitelist(currentEmail);
+        if (!whitelist) { await signOut(auth); go('s-unauth'); return; }
+        setupSetPwdScreen(whitelist.name);
+        go('s-setpwd');
+      }
+    } catch(e) { go('s-landing'); }
+  } else {
+    go('s-landing');
+  }
+});
+
+/* ══ GOOGLE SIGN IN ══ */
+window.signInWithGoogle = async () => {
+  if (isProcessing) return;
+  isProcessing = true;
+  const btn = document.getElementById('google-btn');
+  const err = document.getElementById('google-err');
+  err.textContent = '';
+  btn.innerHTML = '<span class="spin dark"></span> signing in…';
+  btn.disabled = true;
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    const email = user.email;
+
+    const whitelist = await checkWhitelist(email);
+    if (!whitelist) {
+      await signOut(auth);
+      go('s-unauth');
+      isProcessing = false;
+      btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.2 30.3 0 24 0 14.7 0 6.7 5.5 2.7 13.5l7.8 6.1C12.4 13.2 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.4 5.5-5 7.2l7.7 6C43.6 37.7 46.5 31.5 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.4c-.5-1.4-.8-3-.8-4.4s.3-3 .8-4.4l-7.8-6.1C1 16.2 0 20 0 24s1 7.8 2.7 11.5l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.7l-7.7-6c-2.1 1.4-4.8 2.2-7.8 2.2-6.2 0-11.6-3.7-13.5-9.1l-7.8 6.1C6.7 42.5 14.7 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> continue with google`;
+      btn.disabled = false;
+      return;
+    }
+
+    currentUser = user;
+    currentEmail = email;
+
+    // Check if password already set
+    const ud = await getDoc(doc(db,'users', user.uid));
+    if (ud.exists() && ud.data().hasPassword) {
+      currentName = ud.data().name || whitelist.name;
+      sessionActive = true;
+      await loadClasslist();
+      enterHome(currentName, false);
+    } else {
+      setupSetPwdScreen(whitelist.name);
+      go('s-setpwd');
+    }
+  } catch(e) {
+    if (e.code !== 'auth/popup-closed-by-user') {
+      err.textContent = e.message;
+    }
+  }
+  btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.2l6.7-6.7C35.8 2.2 30.3 0 24 0 14.7 0 6.7 5.5 2.7 13.5l7.8 6.1C12.4 13.2 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h12.7c-.6 3-2.4 5.5-5 7.2l7.7 6C43.6 37.7 46.5 31.5 46.5 24.5z"/><path fill="#FBBC05" d="M10.5 28.4c-.5-1.4-.8-3-.8-4.4s.3-3 .8-4.4l-7.8-6.1C1 16.2 0 20 0 24s1 7.8 2.7 11.5l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.3 0 11.6-2.1 15.5-5.7l-7.7-6c-2.1 1.4-4.8 2.2-7.8 2.2-6.2 0-11.6-3.7-13.5-9.1l-7.8 6.1C6.7 42.5 14.7 48 24 48z"/><path fill="none" d="M0 0h48v48H0z"/></svg> continue with google`;
+  btn.disabled = false;
+  isProcessing = false;
+};
+
+window.signOutAndBack = async () => {
+  await signOut(auth).catch(()=>{});
+  go('s-landing');
+};
+
+async function checkWhitelist(email) {
+  if (!email) return null;
+  const emailLower = email.toLowerCase().trim();
+  // Check by email field
+  const snap = await getDocs(query(collection(db,'classlist'), where('email','==',emailLower)));
+  if (!snap.empty) return { id: snap.docs[0].id, ...snap.docs[0].data() };
+  return null;
+}
+
+/* ══ PASSWORD LOGIN ══ */
+function prefillLoginEmail() {
+  const el = document.getElementById('login-email');
+  if (el && currentEmail) { el.value = currentEmail; el.readOnly = false; el.style.opacity = '1'; }
+}
+
+window.loginWithPwd = async () => {
+  if (isProcessing) return;
+  isProcessing = true;
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pwd = document.getElementById('login-pwd').value;
+  const err = document.getElementById('login-err');
+  err.textContent = '';
+  if (!email) { err.textContent = 'enter your email'; isProcessing = false; return; }
+  if (!pwd) { err.textContent = 'enter your password'; isProcessing = false; return; }
+  if (!currentUser) { err.textContent = 'session lost — use Google sign-in'; isProcessing = false; return; }
+  const btn = document.getElementById('login-btn');
+  btn.innerHTML = '<span class="spin dark"></span>checking…'; btn.disabled = true;
+  try {
+    const ud = await getDoc(doc(db, 'users', currentUser.uid));
+    if (!ud.exists() || !ud.data().hasPassword) {
+      err.textContent = 'no password set — use Google sign-in';
+      btn.innerHTML = 'login →'; btn.disabled = false; isProcessing = false; return;
+    }
+    const hash = await hashPwd(pwd, email);
+    if (hash !== ud.data().pwdHash) {
+      err.textContent = 'wrong password';
+      btn.innerHTML = 'login →'; btn.disabled = false; isProcessing = false; return;
+    }
+    currentName = ud.data().name || '';
+    currentEmail = email;
+    sessionActive = true;
+    await loadClasslist();
+    enterHome(currentName, false);
+  } catch(e) { err.textContent = e.message; }
+  btn.innerHTML = 'login →'; btn.disabled = false;
+  isProcessing = false;
+};
+
+/* ══ SET PASSWORD ══ */
+function setupSetPwdScreen(greeting) {
+  document.getElementById('setup-greeting').textContent = greeting ? greeting.split(' ')[0] : 'there';
+  document.getElementById('setname-in').value = currentEmail;
+  document.getElementById('setpwd-in').value = '';
+  document.getElementById('confirmpwd-in').value = '';
+  document.getElementById('setpwd-err').textContent = '';
+  document.getElementById('confirmpwd-err').textContent = '';
+}
+
+window.savePassword = async () => {
+  if (isProcessing) return;
+  isProcessing = true;
+  const pwd = document.getElementById('setpwd-in').value;
+  const cfm = document.getElementById('confirmpwd-in').value;
+  const e1 = document.getElementById('setpwd-err');
+  const e2 = document.getElementById('confirmpwd-err');
+  e1.textContent = ''; e2.textContent = '';
+  if (pwd.length < 6) { e1.textContent = 'at least 6 characters'; isProcessing = false; return; }
+  if (pwd !== cfm) { e2.textContent = "passwords don't match"; isProcessing = false; return; }
+  const btn = document.getElementById('setpwd-btn');
+  btn.innerHTML = '<span class="spin"></span>saving…'; btn.disabled = true;
+  try {
+    const hash = await hashPwd(pwd, currentEmail);
+    const whitelist = await checkWhitelist(currentEmail);
+    const displayName = whitelist ? whitelist.name : currentEmail;
+    await setDoc(doc(db,'users', currentUser.uid), {
+      name: displayName,
+      email: currentEmail,
+      hasPassword: true,
+      pwdHash: hash,
+      uid: currentUser.uid,
+      createdAt: serverTimestamp()
+    }, { merge: true });
+    currentName = displayName;
+    sessionActive = true;
+    await loadClasslist();
+    enterHome(currentName, true);
+  } catch(e) {
+    e1.textContent = e.message;
+    btn.innerHTML = 'save & enter →'; btn.disabled = false;
+  }
+  isProcessing = false;
+};
+
+/* ══ HOME ══ */
+function enterHome(name, isNew) {
+  document.getElementById('topbar-name').textContent = name.split(' ')[0];
+  document.getElementById('banner-name').textContent = name.split(' ')[0];
+  const b = document.getElementById('home-banner');
+  b.style.display = 'flex';
+  setTimeout(() => b.style.display = 'none', 4000);
+  go('s-home');
+  toast(isNew ? `welcome, ${name.split(' ')[0]}! 🌿` : `good to see you, ${name.split(' ')[0]}! 🌿`);
+}
+
+window.doLogout = () => {
+  sessionActive = false;
+  selectedPerson = null;
+  // hide google section, show only password login
+  document.getElementById('google-section').style.display = 'none';
+  document.querySelector('.or-divider').style.display = 'none';
+  go('s-auth');
+  toast('logged out 👋');
+};
+
+/* ══ CLASSLIST ══ */
+async function loadClasslist() {
+  // serve from sessionStorage cache if available — saves 75 reads on refresh
+  const cached = sessionStorage.getItem('classlist_v1');
+  if (cached) {
+    try {
+      classlist = JSON.parse(cached);
+      renderList(classlist);
+      loadSlamCounts(classlist); // still fetch counts fresh
+      return;
+    } catch(e) { sessionStorage.removeItem('classlist_v1'); }
+  }
+  const snap = await getDocs(collection(db, 'classlist'));
+  classlist = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  classlist.sort((a, b) => a.name.localeCompare(b.name));
+  sessionStorage.setItem('classlist_v1', JSON.stringify(classlist));
+  renderList(classlist);
+}
+
+function renderList(people) {
+  const el = document.getElementById('plist');
+  const em = document.getElementById('plist-empty');
+  el.innerHTML = '';
+  if (!people.length) { el.style.display = 'none'; em.style.display = 'block'; return; }
+  el.style.display = 'block'; em.style.display = 'none';
+  people.forEach(p => {
+    const initials = p.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+    const row = document.createElement('div');
+    row.className = 'person-row';
+    row.innerHTML = `<div class="avi">${initials}</div><div class="person-info"><div class="person-name">${esc(p.name)}</div><div class="person-meta" id="pmeta-${p.id}">tap to write a slam</div></div><div class="person-arrow">›</div>`;
+    row.onclick = () => openPersonPage(p);
+    el.appendChild(row);
+  });
+  loadSlamCounts(people);
+}
+
+let _slamCountsCache = null;
+
+async function loadSlamCounts(people) {
+  if (!currentUser) return;
+  try {
+    if (!_slamCountsCache) {
+      const snap = await getDocs(query(collection(db,'slams'), where('fromUid','==',currentUser.uid)));
+      _slamCountsCache = {};
+      snap.docs.forEach(d => { const e = d.data().recipientEmail; _slamCountsCache[e] = (_slamCountsCache[e]||0)+1; });
+    }
+    people.forEach(p => {
+      const el = document.getElementById(`pmeta-${p.id}`);
+      if (!el) return;
+      el.innerHTML = _slamCountsCache[p.email] > 0 ? `<span class="wrote-pill">✍️ slam written</span>` : 'tap to write a slam';
+    });
+  } catch(e) {}
+}
+
+window.filterList = () => {
+  const q = document.getElementById('search-in').value.toLowerCase();
+  renderList(classlist.filter(p => p.name.toLowerCase().includes(q)));
+};
+
+/* ══ PERSON PAGE ══ */
+async function openPersonPage(person) {
+  if (!sessionActive || !currentUser) { go('s-auth'); return; }
+  selectedPerson = person;
+  const initials = person.name.split(' ').map(w => w[0]).join('').slice(0,2).toUpperCase();
+  document.getElementById('ph-avi').textContent = initials;
+  document.getElementById('ph-name').textContent = person.name;
+  document.getElementById('ph-sub').textContent = 'loading…';
+  const firstName = person.name.split(' ')[0];
+  document.getElementById('desc-label').textContent = `describe ${firstName}`;
+  document.getElementById('rate-label').textContent = `rate ${firstName}`;
+  const writerFirst = currentName ? currentName.split(' ')[0] : 'you';
+  document.getElementById('about-label').textContent = `about you, ${writerFirst}`;
+  resetWriteForm();
+  const isSelf = person.email && person.email.toLowerCase() === currentEmail.toLowerCase();
+  document.getElementById('write-panel').style.display = isSelf ? 'none' : 'block';
+  go('s-person');
+  await loadMySlamsForPerson(person);
+}
+
+function resetWriteForm() {
+  document.getElementById('slam-text').value = '';
+  document.getElementById('slam-text').style.color = '#1c1914';
+  document.getElementById('extras-text').value = '';
+  document.getElementById('slam-err').textContent = '';
+  document.getElementById('insta-in').value = '';
+  document.getElementById('contact-phone').value = '';
+  document.getElementById('contact-section').style.display = 'none';
+  clearImg();
+  selectedEmoji = null;
+  document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+  penColor = '#1c1914';
+  document.querySelectorAll('.pen-dot').forEach((d,i) => d.classList.toggle('active', i===0));
+  setAnon(true);
+}
+
+// Imgur anonymous upload — no account needed
+// Client ID from a free registered Imgur app (read-only, safe to expose)
+const VERCEL_URL = "https://your-project.vercel.app"; // 🔧 replace with your Vercel URL
+
+let uploadedImgUrl = null;
+
+window.handleImgUpload = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 20 * 1024 * 1024) {
+    document.getElementById('img-url-err').textContent = 'file too large — max 20MB';
+    document.getElementById('img-file-in').value = '';
+    return;
+  }
+  const err = document.getElementById('img-url-err');
+  const uploadBtn = document.getElementById('img-upload-btn');
+  const uploadingEl = document.getElementById('img-uploading');
+  const previewWrap = document.getElementById('img-preview-wrap');
+  const preview = document.getElementById('img-preview');
+  err.textContent = '';
+
+  const compressed = await compressForUpload(file);
+
+  uploadBtn.style.display = 'none';
+  uploadingEl.style.display = 'block';
+
+  try {
+    const res = await fetch(`${VERCEL_URL}/api/upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: compressed.split(',')[1] }),
+    });
+    const data = await res.json();
+    if (!data.url) throw new Error(data.error || 'upload failed');
+    uploadedImgUrl = data.url;
+    preview.src = uploadedImgUrl;
+    previewWrap.style.display = 'block';
+    toast('photo uploaded! 📸');
+  } catch(e) {
+    err.textContent = 'upload failed — try again or skip photo';
+    uploadBtn.style.display = 'flex';
+  }
+  uploadingEl.style.display = 'none';
+  document.getElementById('img-file-in').value = '';
+};
+
+window.clearImg = () => {
+  uploadedImgUrl = null;
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('img-preview').src = '';
+  document.getElementById('img-url-err').textContent = '';
+  document.getElementById('img-upload-btn').style.display = 'flex';
+  document.getElementById('img-file-in').value = '';
+};
+
+function compressForUpload(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let w = img.width, h = img.height, max = 1200;
+        if (w > h) { if (w > max) { h = Math.round(h*max/w); w = max; } }
+        else { if (h > max) { w = Math.round(w*max/h); h = max; } }
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ══ LOAD MY SLAMS ══ */
+async function loadMySlamsForPerson(person) {
+  const el = document.getElementById('my-slams-for-person');
+  const section = document.getElementById('my-slams-section');
+  el.innerHTML = `<div style="color:var(--ink3);font-size:13px;padding:10px 0;"><span class="spin dark"></span> loading…</div>`;
+  section.style.display = 'block';
+  let docs = [];
+  try {
+    const q = query(collection(db,'slams'), where('fromUid','==',currentUser.uid), where('recipientEmail','==',person.email), orderBy('timestamp','desc'));
+    const snap = await getDocs(q);
+    docs = snap.docs;
+  } catch(e) {
+    try {
+      const s2 = await getDocs(query(collection(db,'slams'), where('fromUid','==',currentUser.uid), where('recipientEmail','==',person.email)));
+      docs = s2.docs.sort((a,b) => (b.data().timestamp?.seconds||0)-(a.data().timestamp?.seconds||0));
+    } catch(e2) { el.innerHTML = `<div class="err" style="font-size:12px">⚠️ building index… try again in a minute</div>`; return; }
+  }
+  const isSelf = person.email && person.email.toLowerCase() === currentEmail.toLowerCase();
+  document.getElementById('write-panel').style.display = (docs.length > 0 || isSelf) ? 'none' : 'block';
+  if (!docs.length) { section.style.display = 'none'; document.getElementById('ph-sub').textContent = 'write the first slam below!'; return; }
+  document.getElementById('ph-sub').textContent = 'slam written ✓';
+  el.innerHTML = '';
+  const header = document.createElement('div');
+  header.className = 'slam-done-header';
+  header.innerHTML = `<div style="font-size:22px;line-height:1;">🔏</div><div style="flex:1"><div class="slam-done-title">your slam for ${esc(person.name)}</div><div class="slam-done-sub">sealed forever — tear & rewrite if you want!</div></div><div class="slam-done-pill">saved ✓</div>`;
+  el.appendChild(header);
+  docs.forEach(d => el.appendChild(buildSlamCard(d.id, d.data(), true)));
+}
+
+/* ══ POST SLAM ══ */
+window.postSlam = async () => {
+  if (isProcessing) return;
+  isProcessing = true;
+  const content = document.getElementById('slam-text').value.trim();
+  const extras = document.getElementById('extras-text').value.trim();
+  const instaRaw = document.getElementById('insta-in').value.trim();
+  const insta = instaRaw ? instaRaw.replace(/^@/,'') : '';
+  const contactPhone = document.getElementById('contact-phone').value.trim();
+  const imgUrl = uploadedImgUrl || null;
+  const err = document.getElementById('slam-err');
+  err.textContent = '';
+  if (!content) { err.textContent = 'describe section required!'; isProcessing = false; return; }
+  if (content.length > 2000) { err.textContent = 'too long — max 2000 characters'; isProcessing = false; return; }
+  if (extras.length > 2000) { err.textContent = 'about section too long — max 2000 characters'; isProcessing = false; return; }
+  if (!selectedPerson) { err.textContent = 'no person selected'; isProcessing = false; return; }
+  if (!sessionActive || !currentUser) { go('s-auth'); isProcessing = false; return; }
+  const btn = document.getElementById('post-btn');
+  btn.innerHTML = '<span class="spin"></span>posting…'; btn.disabled = true;
+  try {
+    const countSnap = await getDocs(query(collection(db,'slams'), where('fromUid','==',currentUser.uid), where('recipientEmail','==',selectedPerson.email)));
+    if (countSnap.size >= 1) { err.textContent = `already written for ${selectedPerson.name}!`; btn.innerHTML = 'post slam 🚀'; btn.disabled = false; isProcessing = false; return; }
+    const slamData = {
+      recipientEmail: selectedPerson.email || null,
+      recipientName: selectedPerson.name,
+      fromUid: currentUser.uid,
+      fromEmail: currentEmail,
+      fromName: isAnon ? null : currentName,
+      isAnon,
+      content,
+      extras: extras || null,
+      emoji: selectedEmoji || null,
+      insta: (!isAnon && insta) ? insta : null,
+      contactPhone: (!isAnon && contactPhone) ? contactPhone : null,
+      imgUrl: imgUrl || null,
+      penColor: penColor || '#1c1914',
+      timestamp: serverTimestamp(),
+    };
+    await addDoc(collection(db,'slams'), slamData);
+
+    // 📧 Notify recipient via Cloud Function
+    if (selectedPerson.email) {
+      try {
+        await fetch(NOTIFY_FUNCTION_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            recipientEmail: selectedPerson.email,
+            recipientName: selectedPerson.name,
+            fromName: isAnon ? 'someone who cares 🤫' : currentName,
+          })
+        });
+      } catch(e) { /* notification failure is non-fatal */ }
+    }
+
+    launchConfetti();
+    toast('slam posted! sealed forever 🔏');
+    _slamCountsCache = null; // invalidate so pill updates
+    resetWriteForm();
+    await loadMySlamsForPerson(selectedPerson);
+    renderList(classlist);
+  } catch(e) { err.textContent = 'error: ' + e.message; }
+  btn.innerHTML = 'post slam 🚀'; btn.disabled = false;
+  isProcessing = false;
+};
+
+/* ══ MY SLAMS TAB ══ */
+async function loadMySlams() {
+  if (!sessionActive || !currentUser) { go('s-auth'); return; }
+  const el = document.getElementById('mine-list');
+  el.innerHTML = `<div style="color:var(--ink3);font-size:13px;padding:10px 0;"><span class="spin dark"></span> loading…</div>`;
+  let docs = [];
+  try {
+    const snap = await getDocs(query(collection(db,'slams'), where('recipientEmail','==',currentEmail), orderBy('timestamp','desc')));
+    docs = snap.docs;
+  } catch(e) {
+    try {
+      const s = await getDocs(query(collection(db,'slams'), where('recipientEmail','==',currentEmail)));
+      docs = s.docs.sort((a,b) => (b.data().timestamp?.seconds||0)-(a.data().timestamp?.seconds||0));
+    } catch(e2) { el.innerHTML = `<div class="err" style="font-size:12px">⚠️ building index…</div>`; return; }
+  }
+  if (!docs.length) {
+    el.innerHTML = `<div class="empty"><div class="empty-art">📬</div><div class="empty-title">nothing yet</div><div class="empty-sub">share the link so classmates can write for you!</div></div>`;
+    return;
+  }
+  el.innerHTML = '';
+  el.insertAdjacentHTML('afterbegin', `<div style="font-family:'Caveat',cursive;font-size:22px;color:var(--ink2);margin-bottom:18px;text-align:center;">${docs.length} slam${docs.length!==1?'s':''} written for you 💌</div>`);
+
+  docs.forEach(d => {
+    const data = d.data();
+    const id = d.id;
+    const fromLabel = data.isAnon ? '👤 anonymous' : esc(data.fromName || 'someone');
+    const initials = data.isAnon ? '?' : (data.fromName||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const date = data.timestamp?.toDate().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'})||'';
+
+    const row = document.createElement('div');
+    row.style.cssText = 'margin-bottom:10px;';
+    row.innerHTML = `
+      <div onclick="toggleSlamExpand('${id}', this)"
+        style="display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--c2);border:1.5px solid var(--c4);border-radius:12px;cursor:pointer;transition:background .12s;">
+        <div class="avi" style="flex-shrink:0;">${initials}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14.5px;font-weight:500;color:var(--ink);">${fromLabel}</div>
+          <div style="font-size:11.5px;color:var(--ink3);margin-top:2px;">${date}</div>
+        </div>
+        <div style="font-size:20px;transition:transform .2s;" id="arrow-${id}">›</div>
+      </div>
+      <div id="slam-expand-${id}" style="display:none;margin-top:6px;"></div>
+    `;
+    el.appendChild(row);
+  });
+
+  // store docs for lazy expand
+  window._mySlamDocs = {};
+  docs.forEach(d => { window._mySlamDocs[d.id] = d; });
+}
+
+window.toggleSlamExpand = (id, headerEl) => {
+  const expandEl = document.getElementById(`slam-expand-${id}`);
+  const arrow = document.getElementById(`arrow-${id}`);
+  if (expandEl.style.display === 'none') {
+    // open
+    if (!expandEl.innerHTML) {
+      const d = window._mySlamDocs[id];
+      expandEl.appendChild(buildSlamCard(d.id, d.data(), false));
+    }
+    expandEl.style.display = 'block';
+    arrow.style.transform = 'rotate(90deg)';
+    headerEl.style.background = 'var(--gl2)';
+    headerEl.style.borderColor = 'var(--g4)';
+  } else {
+    // close
+    expandEl.style.display = 'none';
+    arrow.style.transform = 'rotate(0deg)';
+    headerEl.style.background = 'var(--c2)';
+    headerEl.style.borderColor = 'var(--c4)';
+  }
+};
+
+/* ══ SLAM CARD ══ */
+function buildSlamCard(id, data, canDelete) {
+  const wrap = document.createElement('div');
+  wrap.className = 'slam-wrap';
+  wrap.id = `sc-${id}`;
+  const date = data.timestamp?.toDate().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'2-digit'})||'';
+  const fromLabel = data.isAnon ? '👤 anonymous' : esc(data.fromName||'someone');
+  const writerFirst = data.isAnon ? null : (data.fromName||'').split(' ')[0];
+  const inkColor = data.penColor || '#1c1914';
+  const imgUrl = data.imgUrl || null;
+  const descTitle = data.isAnon ? 'what they think about you' : `what ${writerFirst} thinks about you`;
+  const aboutTitle = data.isAnon ? 'about them' : `about ${writerFirst}`;
+  const contactHtml = (!data.isAnon && (data.contactPhone || data.insta))
+    ? `${data.contactPhone?`<span>📱 ${esc(data.contactPhone)}</span>`:''}${data.insta?`<span>@${esc(data.insta)}</span>`:''}`
+    : '';
+  const holes = Array(5).fill('<div class="slam-hole"></div>').join('<div class="slam-spiral-line"></div>');
+  const photoSrc = imgUrl ? imgUrl.replace(/'/g,'%27') : '';
+
+  wrap.innerHTML = `
+    <div class="slam-card">
+      <div class="slam-holes">${holes}</div>
+      <div class="slam-body">
+        <div class="sl-from-row">
+          <span class="sl-from">${fromLabel}</span>
+          <span class="sl-date">${date}</span>
+        </div>
+        <div class="sl-from-sep"></div>
+        <div class="sl-gap"></div>
+        <div class="sl-section"><span class="sl-section-label">${descTitle}</span></div>
+        <div class="sl-block" style="color:${inkColor}">${esc(data.content)}</div>
+        ${data.emoji ? `
+        <div class="sl-gap"></div>
+        <div class="sl-section"><span class="sl-section-label">rated you</span></div>
+        <div class="sl-emoji-row">${['😍','😂','😊','😁','😐'].map(e=>`<span class="sl-emoji-opt${e===data.emoji?' sel':''}">${e}</span>`).join('')}</div>
+        ` : ''}
+        ${data.extras ? `
+        <div class="sl-gap"></div>
+        <div class="sl-section"><span class="sl-section-label">${aboutTitle}</span></div>
+        <div class="sl-block" style="color:var(--ink2)">${esc(data.extras)}</div>
+        ` : ''}
+        ${contactHtml ? `
+        <div class="sl-gap"></div>
+        <div class="sl-section"><span class="sl-section-label">contact me at</span></div>
+        <div class="sl-contact">${contactHtml}</div>
+        ` : ''}
+        ${imgUrl ? `
+        <div class="sl-gap"></div>
+        <div class="sl-section"><span class="sl-section-label">a memory</span></div>
+        <div class="sl-photo-area">
+          <div class="slam-photo-pasted" onclick="openLightbox('${photoSrc}')">
+            <img src="${imgUrl}" loading="lazy" alt="memory"/>
+          </div>
+        </div>
+        ` : ''}
+        <div class="sl-bottom"></div>
+      </div>
+    </div>
+    ${canDelete ? `<div class="tear-row"><span class="tear-note">✂️ not happy? tear the page and write a new one</span><button class="tear-btn" onclick="askDelete('${id}')">🗑️ tear</button></div>` : ''}
+  `;
+  requestAnimationFrame(() => {
+    const lhPx = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--lh')) || 36;
+    wrap.querySelectorAll('.sl-block').forEach(block => {
+      const lines = Math.ceil(block.scrollHeight / lhPx);
+      block.style.height = (lines * lhPx) + 'px';
+      block.style.overflow = 'hidden';
+    });
+  });
+  return wrap;
+}
+
+/* ══ DELETE ══ */
+window.askDelete = (id) => { deleteSlamId = id; document.getElementById('del-modal').classList.add('on'); };
+window.closeModal = () => { deleteSlamId = null; document.getElementById('del-modal').classList.remove('on'); };
+window.confirmDelete = async () => {
+  if (!deleteSlamId || isProcessing) return;
+  isProcessing = true;
+  try {
+    await deleteDoc(doc(db,'slams', deleteSlamId));
+    const el = document.getElementById(`sc-${deleteSlamId}`);
+    if (el) { el.style.opacity='0'; el.style.transform='scale(.95)'; el.style.transition='all .25s'; setTimeout(()=>el.remove(),260); }
+    _slamCountsCache = null;
+    toast('page torn! write a fresh one ✂️');
+    closeModal();
+    if (selectedPerson) await loadMySlamsForPerson(selectedPerson);
+    renderList(classlist);
+  } catch(e) { toast('delete failed: ' + e.message, true); closeModal(); }
+  isProcessing = false;
+};
+
+/* ══ UTILITIES ══ */
+window.switchTab = (tab) => {
+  document.getElementById('tab-write').style.display = tab==='write'?'block':'none';
+  document.getElementById('tab-mine').style.display = tab==='mine'?'block':'none';
+  document.getElementById('tab-write-btn').classList.toggle('active', tab==='write');
+  document.getElementById('tab-mine-btn').classList.toggle('active', tab==='mine');
+  if (tab==='mine') loadMySlams();
+};
+window.setAnon = (val) => {
+  isAnon = val;
+  document.getElementById('anon-yes').classList.toggle('on', val);
+  document.getElementById('anon-no').classList.toggle('on', !val);
+  document.getElementById('anon-hint').textContent = val ? "they won't know it's you." : `they'll see it's from ${currentName||'you'}.`;
+  document.getElementById('contact-section').style.display = val ? 'none' : 'block';
+};
+window.selectEmoji = (el, emoji) => {
+  if (selectedEmoji===emoji) { selectedEmoji=null; el.classList.remove('selected'); }
+  else { selectedEmoji=emoji; document.querySelectorAll('.emoji-opt').forEach(e=>e.classList.remove('selected')); el.classList.add('selected'); }
+};
+window.togglePwd = (id, btn) => {
+  const inp = document.getElementById(id);
+  inp.type = inp.type==='password'?'text':'password';
+  btn.textContent = inp.type==='text'?'🙈':'👁';
+};
+window.pwdStrength = () => {
+  const v = document.getElementById('setpwd-in').value;
+  const bars = [1,2,3,4].map(i=>document.getElementById(`pb${i}`));
+  bars.forEach(b=>b.className='pwd-bar');
+  let s=0;
+  if(v.length>=6)s++;if(v.length>=10)s++;if(/[0-9]/.test(v)||/[^a-zA-Z0-9]/.test(v))s++;if(v.length>=14)s++;
+  const c = s<=1?'weak':s<=2?'ok':'strong';
+  for(let i=0;i<s;i++) bars[i].classList.add(c);
+};
+window.setPenColor = (el, color) => {
+  penColor = color;
+  document.querySelectorAll('.pen-dot').forEach(d=>d.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('slam-text').style.color = color;
+};
+async function sha256(str) { const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str)); return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+async function hashPwd(pwd, email) { return await sha256(email + pwd + email); }
+function esc(s) { if(!s)return''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>'); }
+window.toast = (msg, warn=false) => { const el=document.getElementById('toast'); el.textContent=msg; el.style.background=warn?'var(--red)':'var(--g)'; el.classList.add('on'); setTimeout(()=>el.classList.remove('on'),3200); };
+window.go = (id) => { document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); const t=document.getElementById(id); if(t)t.classList.add('active'); window.scrollTo(0,0); };
+window.openLightbox = (url) => { document.getElementById('lb-img').src=url; document.getElementById('lightbox').classList.add('on'); };
+window.closeLightbox = () => { document.getElementById('lightbox').classList.remove('on'); document.getElementById('lb-img').src=''; };
+document.addEventListener('keydown', e => { if(e.key==='Escape'&&document.getElementById('lightbox').classList.contains('on'))closeLightbox(); });
+
+function launchConfetti() {
+  const canvas=document.getElementById('confetti-canvas');
+  canvas.style.display='block'; canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  const ctx=canvas.getContext('2d');
+  const colors=['#1e4d2b','#5aab66','#9a7c2e','#c0392b','#1a3a8f','#d6ccb4'];
+  const pieces=Array.from({length:55},()=>({x:Math.random()*canvas.width,y:-10-Math.random()*40,r:4+Math.random()*4,d:1.8+Math.random()*2,color:colors[Math.floor(Math.random()*colors.length)],angle:0,tiltSpeed:0.08+Math.random()*.1}));
+  let frame=0;
+  (function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const alpha=Math.max(0,1-frame/100);
+    pieces.forEach(p=>{p.y+=p.d;p.angle+=p.tiltSpeed;ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.ellipse(p.x+Math.sin(p.angle)*8,p.y,p.r,p.r*.45,p.angle,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();ctx.restore();});
+    frame++;
+    if(frame<100)requestAnimationFrame(draw); else canvas.style.display='none';
+  })();
+}
+</script>
+</body>
+</html>
